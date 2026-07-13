@@ -1,0 +1,107 @@
+---
+// Header component: utility bar + main nav, per style tile
+const navLinkClass = 'font-medium text-charcoal transition-colors hover:text-accent';
+const mobileNavLinkClass = 'block rounded px-2 py-2 font-medium text-charcoal transition-colors hover:bg-background hover:text-accent';
+
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/faq', label: 'Questions / FAQ' },
+  { href: '/experts', label: 'Our Experts' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+
+<header class="sticky top-0 z-[100] font-body">
+  <div class="bg-charcoal px-4 py-2 text-xs text-white">
+    <div class="mx-auto flex max-w-desktop items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <a href="tel:+441952605849" class="flex items-center gap-1.5 text-white transition-colors hover:text-accent">
+          <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          01952 605 849
+        </a>
+        <a href="mailto:info@enclosureanswers.com" class="hidden items-center gap-1.5 text-white transition-colors hover:text-accent md:flex">
+          <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16v16H4z"></path>
+            <path d="m4 6 8 7 8-7"></path>
+          </svg>
+          info@enclosureanswers.com
+        </a>
+      </div>
+      <p class="text-white/80">
+        <span class="hidden md:inline">Free expert advice &middot; Typical response within 1 working day</span>
+        <span class="md:hidden">Free expert advice</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="border-b border-border bg-surface px-4 py-4">
+    <div class="mx-auto flex max-w-desktop items-center justify-between gap-4">
+      <a href="/" class="flex items-center gap-3 no-underline">
+        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-accent font-sans text-sm font-bold text-white">EA</span>
+        <span class="flex flex-col">
+          <span class="font-sans text-lg font-bold text-charcoal">Enclosure Answers</span>
+          <span class="hidden text-xs text-muted md:block">Expert enclosure FAQs from Spelsberg UK</span>
+        </span>
+      </a>
+
+      <nav class="hidden items-center gap-6 md:flex">
+        {navLinks.map((link) => (
+          <a
+            href={link.href}
+            class={link.href === '/'
+              ? `${navLinkClass} border-b-2 border-accent pb-1`
+              : navLinkClass}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <a
+        href="/contact"
+        class="hidden shrink-0 rounded bg-accent px-5 py-2.5 font-semibold text-white no-underline transition-colors hover:bg-accent-dark md:inline-block"
+      >
+        Ask a Question
+      </a>
+
+      <button
+        id="mobile-menu-toggle"
+        type="button"
+        class="text-charcoal md:hidden"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+
+    <nav id="mobile-menu" class="hidden flex-col gap-1 pt-4 md:hidden">
+      {navLinks.map((link) => (
+        <a href={link.href} class={mobileNavLinkClass}>{link.label}</a>
+      ))}
+      <a
+        href="/contact"
+        class="mt-2 rounded bg-accent px-5 py-2.5 text-center font-semibold text-white no-underline transition-colors hover:bg-accent-dark"
+      >
+        Ask a Question
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('mobile-menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+
+  toggle?.addEventListener('click', () => {
+    const isHidden = menu?.classList.toggle('hidden');
+    menu?.classList.toggle('flex', !isHidden);
+    toggle.setAttribute('aria-expanded', String(!isHidden));
+  });
+</script>

@@ -1,11 +1,52 @@
 ---
-import Welcome from '../components/Welcome.astro';
+// Home page
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Enclosure Answers | Expert Solutions for Electrical Enclosures" description="Find expert answers about electrical enclosures, cable glands, and more.">
+  <div class="mb-8 rounded-lg bg-[linear-gradient(135deg,#2F6D04_0%,rgba(47,109,4,0.8)_100%)] px-4 py-8 text-center text-white md:mb-16 md:px-8 md:py-16">
+    <div>
+      <h1 class="mb-4 text-[1.75rem] font-bold md:text-[2.5rem]">Find Expert Answers About Electrical Enclosures</h1>
+      <p class="mb-8 text-[0.95rem] opacity-95 md:text-[1.1rem]">Browse our comprehensive guide to IP-rated cable glands, dust-tight enclosures, flanged busbar trunking, and more.</p>
+
+      <div class="mx-auto mb-8 flex max-w-[500px] flex-col gap-2 md:flex-row">
+        <input
+          type="text"
+          placeholder="Search for a product or question..."
+          class="flex-1 rounded border-0 px-4 py-3 font-sans text-base"
+          aria-label="Search"
+        />
+        <button class="cursor-pointer rounded border-0 bg-white px-6 py-3 font-semibold text-accent transition-colors hover:bg-[#f0f0f0]">Search</button>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-3 md:gap-4">
+        <a href="/search" class="rounded border-2 border-white bg-white/20 px-6 py-3 font-medium text-white no-underline transition-all hover:bg-white hover:text-accent">Browse All</a>
+        <a href="/experts" class="rounded border-2 border-white/50 bg-transparent px-6 py-3 font-medium text-white no-underline transition-all hover:bg-white hover:text-accent">Talk to an Expert</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="mb-16">
+    <h2 class="mb-8 text-2xl text-[#333] md:text-[2rem]">Popular Categories</h2>
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-[repeat(auto-fit,minmax(280px,1fr))]">
+      <a href="/category/cable-glands" class="rounded-lg border-2 border-border bg-white p-8 no-underline transition-all hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]">
+        <h3 class="mb-2 text-xl text-accent">Cable Glands</h3>
+        <p class="text-[0.95rem] text-muted">IP-rated solutions for secure cable entry</p>
+      </a>
+      <a href="/category/enclosures" class="rounded-lg border-2 border-border bg-white p-8 no-underline transition-all hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]">
+        <h3 class="mb-2 text-xl text-accent">Enclosures</h3>
+        <p class="text-[0.95rem] text-muted">Dust-tight and weather-resistant options</p>
+      </a>
+      <a href="/category/busbar-trunking" class="rounded-lg border-2 border-border bg-white p-8 no-underline transition-all hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]">
+        <h3 class="mb-2 text-xl text-accent">Busbar Trunking</h3>
+        <p class="text-[0.95rem] text-muted">Flanged and non-flanged systems</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="rounded-lg border-2 border-border bg-white px-4 py-8 text-center md:px-8 md:py-12">
+    <h2 class="mb-2 text-2xl text-[#333] md:text-[1.75rem]">Still Have Questions?</h2>
+    <p class="mb-6 text-base text-muted">Our experts are ready to help you find the right solution.</p>
+    <a href="/contact" class="inline-block rounded bg-accent px-8 py-3 font-semibold text-white no-underline transition-colors hover:bg-[#245503]">Get in Touch</a>
+  </section>
 </Layout>

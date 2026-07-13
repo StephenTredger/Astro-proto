@@ -1,0 +1,114 @@
+---
+// Footer component: CTA banner + trust bar + link columns + legal bar
+const footerLinkClass = 'text-sm text-muted no-underline transition-colors hover:text-accent';
+
+const pageLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/faq', label: 'Questions / FAQ' },
+  { href: '/experts', label: 'Our Experts' },
+  { href: '/contact', label: 'Contact' },
+];
+
+const topicLinks = [
+  { href: '/category/ip-ratings', label: 'IP ratings' },
+  { href: '/category/fire-resistance', label: 'Fire resistance' },
+  { href: '/category/outdoor-uv', label: 'Outdoor & UV' },
+  { href: '/category/materials', label: 'Materials' },
+  { href: '/category/din-rail-boards', label: 'DIN rail & boards' },
+];
+
+const trustItems = [
+  'In-house VDE testing facility',
+  'German engineering since 1904',
+  'UK stock & technical team in Telford',
+  'Free, impartial advice',
+];
+---
+
+<footer class="mt-16">
+  <div class="bg-charcoal px-4 py-8 text-white md:py-12">
+    <div class="mx-auto flex max-w-desktop flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h2 class="m-0 mb-2 font-sans text-2xl font-bold md:text-[1.75rem]">Can&rsquo;t find your answer?</h2>
+        <p class="m-0 max-w-xl text-white/80">
+          <span class="hidden md:inline">Send our engineers your question &mdash; we&rsquo;ll reply by email within one working day, free of charge. No sales pitch, just an answer.</span>
+          <span class="md:hidden">Free reply from a Spelsberg UK engineer within one working day.</span>
+        </p>
+      </div>
+      <div class="flex w-full flex-col gap-3 md:w-auto md:flex-row">
+        <a href="/experts" class="rounded bg-accent px-6 py-3 text-center font-semibold text-white no-underline transition-colors hover:bg-accent-dark">Ask our experts</a>
+        <a href="tel:+441952605849" class="rounded border-2 border-white px-6 py-3 text-center font-semibold text-white no-underline transition-colors hover:bg-white hover:text-charcoal">Call 01952 605 849</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hidden border-b border-border bg-surface px-4 py-3 md:block">
+    <div class="mx-auto flex max-w-desktop flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm text-charcoal">
+      {trustItems.map((item) => (
+        <span class="flex items-center gap-1.5">
+          <span class="text-accent">&#10003;</span> {item}
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <div class="bg-background px-4 py-8 md:py-12">
+    <div class="mx-auto grid max-w-desktop gap-8 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
+      <div>
+        <a href="/" class="flex items-center gap-3 no-underline">
+          <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded bg-accent font-sans text-sm font-bold text-white">EA</span>
+          <span class="font-sans text-lg font-bold text-charcoal">Enclosure Answers</span>
+        </a>
+        <p class="mt-3 hidden text-sm text-muted md:block">
+          Free technical FAQs on electrical enclosures, run by the engineering team at Spelsberg UK.
+        </p>
+        <p class="mt-3 text-sm text-muted md:hidden">
+          01952 605 849 &middot; <a href="mailto:info@enclosureanswers.com" class="text-muted no-underline hover:text-accent">info@enclosureanswers.com</a>
+        </p>
+        <div class="mt-4 inline-flex items-center gap-2 text-sm text-muted">
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-brand-red font-sans text-sm font-bold text-white">S</span>
+          A <strong class="text-brand-red">Spelsberg UK</strong> company
+        </div>
+      </div>
+
+      <div class="hidden md:block">
+        <h3 class="m-0 mb-4 font-sans text-base font-bold text-accent">Pages</h3>
+        <ul class="m-0 list-none space-y-2 p-0">
+          {pageLinks.map((link) => (
+            <li><a href={link.href} class={footerLinkClass}>{link.label}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="hidden md:block">
+        <h3 class="m-0 mb-4 font-sans text-base font-bold text-accent">Popular topics</h3>
+        <ul class="m-0 list-none space-y-2 p-0">
+          {topicLinks.map((link) => (
+            <li><a href={link.href} class={footerLinkClass}>{link.label}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="hidden md:block">
+        <h3 class="m-0 mb-4 font-sans text-base font-bold text-accent">Contact</h3>
+        <p class="m-0 mb-2 font-semibold text-charcoal">01952 605 849</p>
+        <p class="m-0 mb-2 text-sm text-muted">
+          <a href="mailto:info@enclosureanswers.com" class="text-muted no-underline hover:text-accent">info@enclosureanswers.com</a>
+        </p>
+        <p class="m-0 text-sm text-muted">Spelsberg UK, Telford, Shropshire TF3 3BJ</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-border bg-background px-4 py-4">
+    <div class="mx-auto flex max-w-desktop flex-col items-center justify-between gap-2 text-xs text-muted md:flex-row">
+      <p class="m-0">&copy; 2026 Spelsberg els UK Ltd. All rights reserved.</p>
+      <div class="flex gap-4">
+        <a href="/privacy" class="text-muted no-underline hover:text-accent">Privacy</a>
+        <a href="/cookies" class="text-muted no-underline hover:text-accent">Cookies</a>
+        <a href="/terms" class="hidden text-muted no-underline hover:text-accent md:inline">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>

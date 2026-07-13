@@ -1,0 +1,8 @@
+{
+  "claude.mcp.servers": {
+    "astro-docs": {
+      "url": "https://mcp.docs.astro.build/mcp",
+      "transport": "http"
+    }
+  }
+}
