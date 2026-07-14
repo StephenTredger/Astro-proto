@@ -1,6 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-background: #F4F6F3;
+  --color-accent: #4AAC07;
+  --color-accent-dark: #3A8A06;
+  --color-charcoal: #1D211C;
+  --color-border: #C6CCC4;
+  --color-muted: #5A625A;
+  --color-surface: #FFFFFF;
+  --color-brand-red: #C41E3A;
+
+  --font-sans: Archivo, sans-serif;
+  --font-body: "IBM Plex Sans", sans-serif;
+
+  --max-width-desktop: 1440px;
+
+  --spacing-section-sm: 48px;
+  --spacing-section-md: 60px;
+  --spacing-section-lg: 72px;
+
+  --breakpoint-mobile: 390px;
+}
 
 @layer base {
   body {

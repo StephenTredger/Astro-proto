@@ -1,0 +1,131 @@
+---
+// About page: brand/company story, stats, and "what we do" overview
+import Layout from '../layouts/Layout.astro';
+
+const stats = [
+  { value: '1904', label: 'Founded in Germany — family-owned since.' },
+  { value: 'Telford', label: 'UK stock, machining and technical team in Shropshire.' },
+  { value: 'VDE', label: 'In-house VDE-approved testing facility.' },
+  { value: '4,000+', label: 'Enclosure and connection products, plus bespoke work.' },
+];
+
+const whatWeDo = [
+  {
+    number: '01',
+    title: 'Manufacture',
+    description: 'Thermoplastic, GRP and metal enclosures, junction boxes and distribution boards — tested in our own VDE facility.',
+  },
+  {
+    number: '02',
+    title: 'Customise',
+    description: 'Bespoke machining in Telford: cut-outs, cable entries, printing and assembly to your drawing, at low volumes.',
+  },
+  {
+    number: '03',
+    title: 'Advise',
+    description: "Free technical guidance through Enclosure Answers — product-agnostic where we can, honest when we can't.",
+  },
+];
+
+const placeholderPattern = 'bg-[repeating-linear-gradient(45deg,#E4E8E2_0_10px,#EDEFEA_10px_20px)]';
+---
+
+<Layout
+  title="About | Enclosure Answers"
+  description="About Enclosure Answers and Spelsberg UK — free, expert answers on electrical enclosures from the engineers who make them."
+>
+  <nav class="mb-6 text-[13px] text-muted" aria-label="Breadcrumb">
+    <a href="/" class="text-muted no-underline hover:text-accent">Home</a>
+    <span class="mx-2">/</span>
+    <span class="text-charcoal" aria-current="page">About</span>
+  </nav>
+
+  <section class="mb-12 grid gap-8 md:grid-cols-[1fr_400px] md:items-center">
+    <div>
+      <h1 class="mb-4 font-sans text-[28px] font-bold text-charcoal md:text-[38px]">
+        About Enclosure Answers and Spelsberg UK
+      </h1>
+      <p class="mb-4 max-w-2xl text-base text-charcoal">
+        Enclosure Answers is the technical FAQ hub run by Spelsberg UK, a manufacturer of electrical
+        enclosures and connection technology.
+      </p>
+      <p class="max-w-2xl text-base text-muted">
+        We publish free, expert answers to real-world enclosure questions — IP ratings, fire
+        resistance, waterproofing, materials and applications — written by our own engineers.
+      </p>
+    </div>
+    <div class={`relative h-48 overflow-hidden rounded-lg border border-border md:h-64 ${placeholderPattern}`}>
+      <span class="absolute bottom-4 left-4 rounded bg-white/90 px-2 py-1 font-mono text-[13px] text-muted">
+        [ brand image — Telford team / factory ]
+      </span>
+    </div>
+  </section>
+
+  <section class="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-surface">
+    <div class="mx-auto grid max-w-desktop grid-cols-2 gap-4 px-4 py-12 md:grid-cols-4">
+      {stats.map((stat) => (
+        <div class="rounded-lg border border-border p-6">
+          <p class="mb-1 font-sans text-2xl font-bold text-accent">{stat.value}</p>
+          <p class="text-sm text-muted">{stat.label}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-surface">
+    <div class="mx-auto grid max-w-desktop gap-24 px-4 py-12 md:grid-cols-[400px_1fr] md:items-center md:py-16">
+      <div class={`relative h-48 overflow-hidden rounded-lg border border-border md:h-80 ${placeholderPattern}`}>
+        <span class="absolute bottom-4 left-4 rounded bg-white/90 px-2 py-1 font-mono text-[13px] text-muted">
+          [ heritage image — archive / production line ]
+        </span>
+      </div>
+      <div>
+        <h2 class="mb-4 font-sans text-[22px] font-bold text-charcoal md:text-[26px]">Our story</h2>
+        <p class="mb-4 max-w-3xl text-base text-charcoal">
+          Spelsberg has manufactured enclosures and connection technology for over 120 years.
+        </p>
+        <p class="mb-4 max-w-3xl text-base text-charcoal">
+          Spelsberg UK, based in Telford, holds UK stock and runs a bespoke machining service —
+          cut-outs, drilling and printing to order.
+        </p>
+        <p class="mb-4 max-w-3xl text-base text-muted">
+          Enclosure Answers exists because our technical team kept getting the same practical
+          questions from engineers, panel builders and contractors — and the answers weren't
+          written down anywhere public.
+        </p>
+        <p class="mb-6 max-w-3xl text-base text-muted">
+          So we publish them. Free, impartial, and signed by the engineer who wrote them.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <a
+            href="/faq"
+            class="rounded bg-accent px-6 py-3 text-center font-semibold text-white no-underline transition-colors hover:bg-accent-dark"
+          >
+            Browse questions
+          </a>
+          <a
+            href="/experts"
+            class="rounded border-2 border-accent px-6 py-3 text-center font-semibold text-accent no-underline transition-colors hover:bg-accent-dark hover:border-accent-dark hover:text-white"
+          >
+            Contact an expert
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-12 md:py-16">
+    <h2 class="mb-8 font-sans text-[22px] font-bold text-charcoal md:text-[26px]">What we do</h2>
+    <div class="grid gap-6 md:grid-cols-3">
+      {whatWeDo.map((item) => (
+        <div class="rounded-lg border border-border bg-surface p-6">
+          <span class="mb-4 inline-block rounded bg-background px-2 py-1 font-mono text-[13px] font-semibold text-accent">
+            {item.number}
+          </span>
+          <h3 class="mb-2 font-sans text-[17px] font-bold text-charcoal md:text-[19px]">{item.title}</h3>
+          <p class="text-sm text-muted">{item.description}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</Layout>

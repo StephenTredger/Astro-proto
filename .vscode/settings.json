@@ -4,5 +4,6 @@
       "url": "https://mcp.docs.astro.build/mcp",
       "transport": "http"
     }
-  }
+  },
+  "css.lint.unknownAtRules": "ignore"
 }
