@@ -1,0 +1,35 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  action: string;
+  href?: string;
+}
+
+const { title, description, action, href = '#' } = Astro.props;
+
+// The badge is a simple file-type indicator, not a stand-in for a missing image asset.
+const badge =
+  action === 'Download'
+    ? { label: 'PDF', colorClass: 'bg-brand-red/10 text-brand-red' }
+    : action === 'Watch'
+      ? { label: '▶', colorClass: 'bg-accent/10 text-accent' }
+      : { label: '≡', colorClass: 'bg-blue-50 text-blue-700' };
+---
+
+<a
+  href={href}
+  class="flex items-center gap-4 rounded-lg border border-border bg-surface p-4 no-underline transition-colors hover:border-accent"
+>
+  <span
+    class={`flex h-12 w-12 shrink-0 items-center justify-center rounded text-xs font-bold ${badge.colorClass}`}
+    aria-hidden="true"
+  >
+    {badge.label}
+  </span>
+  <span>
+    <span class="block font-sans text-[15px] font-semibold text-charcoal">{title}</span>
+    <span class="block text-sm text-muted">{description}</span>
+    <span class="block text-sm font-semibold text-accent">{action}</span>
+  </span>
+</a>

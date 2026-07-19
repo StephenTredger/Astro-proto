@@ -1,9 +1,12 @@
 ---
 name: "Clare McCusker"
 slug: clare-mccusker
-title: "National Sales Manager"
+title: "Technical Sales Engineer"
 phone: "+44 (0)7726 694015"
 photo: "/images/experts/clare-mccusker.jpg"
+specialisms: ["materials", "outdoor & UV"]
+yearsInIndustry: "12"
+order: 2
 ---
 
-Clare previously worked for a global supplier of electrical distribution and automation control equipment before joining the team. She enjoys working across projects of every scale and helping customers arrive at tailored solutions.
+Advises specifiers and panel builders on materials selection, outdoor and coastal installations, and matching products to demanding environments.

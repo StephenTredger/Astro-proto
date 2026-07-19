@@ -1,52 +1,144 @@
 ---
 // Home page
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import SearchBar from '../components/SearchBar.astro';
+import TopicCard from '../components/TopicCard.astro';
+import FAQAccordionItem from '../components/FAQAccordionItem.astro';
+import ExpertCard from '../components/ExpertCard.astro';
+import { getTopicStyle } from '../lib/topicStyles';
+
+const [allAnswers, allCategories, allExperts] = await Promise.all([
+  getCollection('answers'),
+  getCollection('categories'),
+  getCollection('experts'),
+]);
+
+allExperts.sort((a, b) => a.data.order - b.data.order);
+
+const expertNames = Object.fromEntries(allExperts.map((expert) => [expert.data.slug, expert.data.name]));
+const categoryNameBySlug = Object.fromEntries(allCategories.map((category) => [category.data.slug, category.data.name]));
+
+const topics = allCategories
+  .map((category) => ({
+    name: category.data.name,
+    slug: category.data.slug,
+    count: allAnswers.filter((answer) => answer.data.category === category.data.slug).length,
+    ...getTopicStyle(category.data.slug),
+  }))
+  .filter((topic) => topic.count > 0)
+  .sort((a, b) => b.count - a.count);
+
+const popularTopics = topics.slice(0, 3);
+
+// No view-count data exists yet, so "most-asked" uses one recent answer per topic as a stand-in.
+const featured = topics
+  .map((topic) =>
+    allAnswers
+      .filter((answer) => answer.data.category === topic.slug)
+      .sort((a, b) => (b.data.publishedDate?.getTime() ?? 0) - (a.data.publishedDate?.getTime() ?? 0))[0]
+  )
+  .filter((entry) => entry !== undefined);
+
+const placeholderPattern = 'bg-[repeating-linear-gradient(45deg,#E4E8E2_0_10px,#EDEFEA_10px_20px)]';
 ---
 
-<Layout title="Enclosure Answers | Expert Solutions for Electrical Enclosures" description="Find expert answers about electrical enclosures, cable glands, and more.">
-  <div class="mb-8 rounded-lg bg-[linear-gradient(135deg,#2F6D04_0%,rgba(47,109,4,0.8)_100%)] px-4 py-8 text-center text-white md:mb-16 md:px-8 md:py-16">
+<Layout
+  title="Enclosure Answers | Electrical Enclosure FAQs, Answered by Experts"
+  description="100+ real questions from UK engineers, panel builders and contractors — answered by Spelsberg UK's technical team."
+>
+  <section class="mb-16 grid gap-8 md:grid-cols-[1fr_420px] md:items-center">
     <div>
-      <h1 class="mb-4 text-[1.75rem] font-bold md:text-[2.5rem]">Find Expert Answers About Electrical Enclosures</h1>
-      <p class="mb-8 text-[0.95rem] opacity-95 md:text-[1.1rem]">Browse our comprehensive guide to IP-rated cable glands, dust-tight enclosures, flanged busbar trunking, and more.</p>
-
-      <div class="mx-auto mb-8 flex max-w-[500px] flex-col gap-2 md:flex-row">
-        <input
-          type="text"
-          placeholder="Search for a product or question..."
-          class="flex-1 rounded border-0 px-4 py-3 font-sans text-base"
-          aria-label="Search"
-        />
-        <button class="cursor-pointer rounded border-0 bg-white px-6 py-3 font-semibold text-accent transition-colors hover:bg-[#f0f0f0]">Search</button>
-      </div>
-
-      <div class="flex flex-wrap justify-center gap-3 md:gap-4">
-        <a href="/search" class="rounded border-2 border-white bg-white/20 px-6 py-3 font-medium text-white no-underline transition-all hover:bg-white hover:text-accent">Browse All</a>
-        <a href="/experts" class="rounded border-2 border-white/50 bg-transparent px-6 py-3 font-medium text-white no-underline transition-all hover:bg-white hover:text-accent">Talk to an Expert</a>
+      <h1 class="mb-4 font-sans text-[28px] font-bold text-charcoal md:text-[38px]">
+        Electrical enclosure FAQs, answered by experts
+      </h1>
+      <p class="mb-6 max-w-xl text-base text-muted">
+        100+ real questions from UK engineers, panel builders and contractors &mdash; answered by
+        Spelsberg UK&rsquo;s technical team. IP ratings, fire resistance, materials, DIN rail and
+        outdoor installation.
+      </p>
+      <SearchBar placeholder="What do you want to know?" />
+      <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+        <a
+          href="/faq"
+          class="rounded border border-border bg-surface px-5 py-2.5 text-sm font-semibold text-charcoal no-underline transition-colors hover:border-accent hover:text-accent"
+        >
+          Browse all FAQs
+        </a>
+        <p class="m-0 text-sm text-muted">
+          Popular:{' '}
+          {popularTopics.map((topic, index) => (
+            <>
+              {index > 0 && <span aria-hidden="true"> &middot; </span>}
+              <a href={`/faq#${topic.slug}`} class="font-semibold text-accent no-underline hover:underline">
+                {topic.shortName}
+              </a>
+            </>
+          ))}
+        </p>
       </div>
     </div>
-  </div>
-
-  <section class="mb-16">
-    <h2 class="mb-8 text-2xl text-[#333] md:text-[2rem]">Popular Categories</h2>
-    <div class="grid grid-cols-1 gap-8 md:grid-cols-[repeat(auto-fit,minmax(280px,1fr))]">
-      <a href="/category/cable-glands" class="rounded-lg border-2 border-border bg-white p-8 no-underline transition-all hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]">
-        <h3 class="mb-2 text-xl text-accent">Cable Glands</h3>
-        <p class="text-[0.95rem] text-muted">IP-rated solutions for secure cable entry</p>
-      </a>
-      <a href="/category/enclosures" class="rounded-lg border-2 border-border bg-white p-8 no-underline transition-all hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]">
-        <h3 class="mb-2 text-xl text-accent">Enclosures</h3>
-        <p class="text-[0.95rem] text-muted">Dust-tight and weather-resistant options</p>
-      </a>
-      <a href="/category/busbar-trunking" class="rounded-lg border-2 border-border bg-white p-8 no-underline transition-all hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]">
-        <h3 class="mb-2 text-xl text-accent">Busbar Trunking</h3>
-        <p class="text-[0.95rem] text-muted">Flanged and non-flanged systems</p>
-      </a>
+    <div class={`relative h-56 overflow-hidden rounded-lg border border-border md:h-72 ${placeholderPattern}`}>
+      <span class="absolute bottom-4 left-4 rounded bg-white/90 px-2 py-1 font-mono text-[13px] text-muted">
+        [ hero image &mdash; enclosure range / workshop ]
+      </span>
     </div>
   </section>
 
-  <section class="rounded-lg border-2 border-border bg-white px-4 py-8 text-center md:px-8 md:py-12">
-    <h2 class="mb-2 text-2xl text-[#333] md:text-[1.75rem]">Still Have Questions?</h2>
-    <p class="mb-6 text-base text-muted">Our experts are ready to help you find the right solution.</p>
-    <a href="/contact" class="inline-block rounded bg-accent px-8 py-3 font-semibold text-white no-underline transition-colors hover:bg-[#245503]">Get in Touch</a>
+  <section class="mb-16">
+    <h2 class="mb-2 font-sans text-[22px] font-bold text-charcoal md:text-[26px]">Browse by topic</h2>
+    <p class="mb-6 text-base text-muted">
+      Every answer is written by a named Spelsberg UK engineer &mdash; not a forum, not a chatbot.
+    </p>
+    <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-6">
+      {topics.map((topic) => (
+        <TopicCard
+          code={topic.code}
+          name={topic.shortName}
+          count={topic.count}
+          colorClass={topic.colorClass}
+          href={`/faq#${topic.slug}`}
+        />
+      ))}
+    </div>
+  </section>
+
+  <section class="mb-16">
+    <div class="mb-6 flex items-center justify-between gap-4">
+      <h2 class="font-sans text-[22px] font-bold text-charcoal md:text-[26px]">Most-asked questions</h2>
+      <a href="/faq" class="shrink-0 text-sm font-semibold text-accent no-underline hover:underline">View all FAQs &rarr;</a>
+    </div>
+    <div class="space-y-3">
+      {featured.map((entry, index) => (
+        <FAQAccordionItem
+          entry={entry}
+          expertName={expertNames[entry.data.answeredBy] ?? entry.data.answeredBy}
+          categoryName={categoryNameBySlug[entry.data.category]}
+          open={index === 0}
+        />
+      ))}
+    </div>
+  </section>
+
+  <section class="mb-8">
+    <div class="mb-6 flex items-center justify-between gap-4">
+      <div>
+        <h2 class="mb-1 font-sans text-[22px] font-bold text-charcoal md:text-[26px]">
+          The engineers behind the answers
+        </h2>
+        <p class="m-0 text-base text-muted">
+          Real, named engineers from Spelsberg UK&rsquo;s technical team &mdash; call them directly, no
+          call centre.
+        </p>
+      </div>
+      <a href="/experts" class="shrink-0 text-sm font-semibold text-accent no-underline hover:underline">
+        Meet all our experts &rarr;
+      </a>
+    </div>
+    <div class="grid gap-6 md:grid-cols-3">
+      {allExperts.map((expert) => (
+        <ExpertCard expert={expert} href={`/experts#${expert.data.slug}`} />
+      ))}
+    </div>
   </section>
 </Layout>

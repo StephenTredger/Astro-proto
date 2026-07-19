@@ -1,0 +1,86 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import SearchBar from '../components/SearchBar.astro';
+import FAQTopicNav from '../components/FAQTopicNav.astro';
+import FAQCategorySection from '../components/FAQCategorySection.astro';
+import ResourceCard from '../components/ResourceCard.astro';
+import { getTopicStyle } from '../lib/topicStyles';
+
+const [allAnswers, allCategories, allExperts] = await Promise.all([
+  getCollection('answers'),
+  getCollection('categories'),
+  getCollection('experts'),
+]);
+
+const expertNames = Object.fromEntries(allExperts.map((expert) => [expert.data.slug, expert.data.name]));
+
+const topics = allCategories
+  .map((category) => ({
+    name: getTopicStyle(category.data.slug).shortName,
+    slug: category.data.slug,
+    count: allAnswers.filter((answer) => answer.data.category === category.data.slug).length,
+  }))
+  .filter((topic) => topic.count > 0)
+  .sort((a, b) => b.count - a.count);
+
+const resources = [
+  { title: 'IP rating selection guide', description: 'One-page chart, PDF', action: 'Download' },
+  { title: 'Video guides', description: 'Installation walk-throughs', action: 'Watch' },
+  { title: 'Product datasheets', description: 'Full range specs', action: 'Browse' },
+];
+---
+
+<Layout
+  title="FAQ | Enclosure Answers"
+  description="Electrical enclosure FAQs answered directly by named Spelsberg UK engineers."
+>
+  <nav class="mb-6 text-[13px] text-muted" aria-label="Breadcrumb">
+    <a href="/" class="text-muted no-underline hover:text-accent">Home</a>
+    <span class="mx-2">/</span>
+    <span class="text-charcoal" aria-current="page">Questions / FAQ</span>
+  </nav>
+
+  <section class="mb-8">
+    <h1 class="mb-3 font-sans text-[28px] font-bold text-charcoal md:text-[38px]">
+      Electrical enclosure FAQs, expert answers
+    </h1>
+    <p class="mb-6 max-w-3xl text-base text-muted">
+      The most common enclosure questions from industry, each answered directly by a named Spelsberg UK
+      engineer. Short answer first, full detail behind it.
+    </p>
+    <SearchBar placeholder={`Search all ${allAnswers.length} questions...`} />
+  </section>
+
+  <div class="grid gap-8 md:grid-cols-[260px_1fr]">
+    <FAQTopicNav topics={topics} activeSlug={topics[0]?.slug} />
+
+    <div class="space-y-12">
+      {topics.map((topic, index) => {
+        const entries = allAnswers
+          .filter((answer) => answer.data.category === topic.slug)
+          .sort((a, b) => (b.data.publishedDate?.getTime() ?? 0) - (a.data.publishedDate?.getTime() ?? 0));
+
+        return (
+          <FAQCategorySection
+            id={topic.slug}
+            name={topic.name}
+            entries={entries}
+            expertNames={expertNames}
+            showSort={index === 0}
+            isFirst={index === 0}
+          />
+        );
+      })}
+    </div>
+  </div>
+
+  <section class="mt-16">
+    <h2 class="mb-6 font-sans text-[22px] font-bold text-charcoal md:text-[26px]">Guides &amp; downloads</h2>
+    <div class="grid gap-4 md:grid-cols-3">
+      {resources.map((resource) => (
+        <ResourceCard title={resource.title} description={resource.description} action={resource.action} />
+      ))}
+    </div>
+  </section>
+</Layout>

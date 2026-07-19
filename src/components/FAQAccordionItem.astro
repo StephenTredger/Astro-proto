@@ -1,0 +1,75 @@
+ ---
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import { getInitials } from '../lib/initials';
+import { isStandardReference } from '../lib/standardsReference';
+
+interface Props {
+  entry: CollectionEntry<'answers'>;
+  expertName: string;
+  open?: boolean;
+  categoryName?: string;
+  variant?: 'card' | 'flat';
+}
+
+const { entry, expertName, open = false, categoryName, variant = 'card' } = Astro.props;
+const wrapperClass =
+  variant === 'flat'
+    ? 'group border-b border-border last:border-b-0 open:bg-background/40'
+    : 'group rounded-lg border border-border bg-surface';
+const { Content } = await render(entry);
+
+const initials = getInitials(expertName);
+
+const reference = entry.data.tags.find(isStandardReference);
+
+const updated = entry.data.publishedDate
+  ? new Date(entry.data.publishedDate).toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    })
+  : null;
+---
+
+<details class={wrapperClass} open={open}>
+  <summary class="flex cursor-pointer items-center justify-between gap-4 px-6 py-4 font-sans text-[17px] font-bold text-charcoal marker:content-none [&::-webkit-details-marker]:hidden">
+    <span>{entry.data.question}</span>
+    <span class="flex shrink-0 items-center gap-3">
+      {categoryName && (
+        <span class="rounded-full bg-background px-2.5 py-1 text-[11px] font-semibold text-muted">{categoryName}</span>
+      )}
+      <span class="text-xl leading-none text-accent" aria-hidden="true">
+        <span class="group-open:hidden">+</span>
+        <span class="hidden group-open:inline">&minus;</span>
+      </span>
+    </span>
+  </summary>
+  <div class="px-6 pb-6">
+    <div class="max-w-none text-base text-charcoal [&_p]:mb-3 [&_p:last-child]:mb-0">
+      <Content />
+    </div>
+    <p class="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-muted">
+      <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-background text-[10px] font-semibold text-muted" aria-hidden="true">
+        {initials}
+      </span>
+      <span>Answered by <strong class="text-charcoal">{expertName}</strong></span>
+      {updated && (
+        <>
+          <span aria-hidden="true">&middot;</span>
+          <span>Updated {updated}</span>
+        </>
+      )}
+      {reference && (
+        <>
+          <span aria-hidden="true">&middot;</span>
+          <span>Ref: {reference}</span>
+        </>
+      )}
+      <span aria-hidden="true">&middot;</span>
+      <a href={`/answer/${entry.data.slug}`} class="font-semibold text-accent no-underline hover:underline">
+        Read the full answer &rarr;
+      </a>
+    </p>
+  </div>
+</details>

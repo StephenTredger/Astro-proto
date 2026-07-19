@@ -1,0 +1,42 @@
+---
+interface Topic {
+  name: string;
+  slug: string;
+  count: number;
+}
+
+interface Props {
+  topics: Topic[];
+  activeSlug?: string;
+}
+
+const { topics, activeSlug } = Astro.props;
+---
+
+<nav aria-label="FAQ topics" class="md:sticky md:top-28">
+  <h2 class="mb-3 font-sans text-sm font-bold uppercase tracking-wide text-charcoal">Topics</h2>
+  <ul class="m-0 list-none space-y-1 p-0">
+    {topics.map((topic) => (
+      <li>
+        <a
+          href={`#${topic.slug}`}
+          class={topic.slug === activeSlug
+            ? 'flex items-center justify-between rounded border-l-4 border-accent bg-background px-3 py-2 font-semibold text-accent no-underline'
+            : 'flex items-center justify-between rounded border-l-4 border-transparent px-3 py-2 text-charcoal no-underline transition-colors hover:bg-background hover:text-accent'}
+        >
+          <span>{topic.name}</span>
+          <span class="text-sm text-muted">{topic.count}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <div class="mt-6 border-t border-border pt-6">
+    <p class="mb-3 text-sm text-muted">Still have a question?</p>
+    <a
+      href="/experts"
+      class="block rounded bg-accent px-4 py-2.5 text-center font-semibold text-white no-underline transition-colors hover:bg-accent-dark"
+    >
+      Ask our experts
+    </a>
+  </div>
+</nav>

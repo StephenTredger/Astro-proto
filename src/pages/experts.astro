@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import ExpertProfileRow from '../components/ExpertProfileRow.astro';
+
+const [allExperts, allAnswers] = await Promise.all([getCollection('experts'), getCollection('answers')]);
+allExperts.sort((a, b) => a.data.order - b.data.order);
+
+const whyAskUs = [
+  'In-house VDE testing facility',
+  '120+ years of engineering',
+  'Named authors on every answer',
+  'Direct dials — no call centre',
+];
+---
+
+<Layout
+  title="Our Experts | Enclosure Answers"
+  description="Meet the named Spelsberg UK engineers who write every answer on this site — call them directly."
+>
+  <nav class="mb-6 text-[13px] text-muted" aria-label="Breadcrumb">
+    <a href="/" class="text-muted no-underline hover:text-accent">Home</a>
+    <span class="mx-2">/</span>
+    <span class="text-charcoal" aria-current="page">Our Experts</span>
+  </nav>
+
+  <section class="mb-8">
+    <h1 class="mb-3 font-sans text-[28px] font-bold text-charcoal md:text-[38px]">
+      Meet the Enclosure Answers experts
+    </h1>
+    <p class="max-w-3xl text-base text-muted">
+      Every answer on this site is written by Spelsberg UK&rsquo;s technical team &mdash; so you can see
+      exactly who stands behind the advice, and call them directly.
+    </p>
+  </section>
+
+  <div class="mb-16 space-y-4">
+    {allExperts.map((expert) => (
+      <ExpertProfileRow
+        expert={expert}
+        questionsAnswered={allAnswers.filter((answer) => answer.data.answeredBy === expert.data.slug).length}
+      />
+    ))}
+  </div>
+
+  <section class="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-background">
+    <div class="mx-auto grid max-w-desktop gap-8 px-4 py-12 md:grid-cols-[1fr_1fr] md:py-16">
+      <div>
+        <h2 class="mb-4 font-sans text-[22px] font-bold text-charcoal md:text-[26px]">Why ask us?</h2>
+        <p class="mb-4 text-base text-muted">
+          Spelsberg has engineered enclosures since 1904 and tests in its own VDE-approved facility. The
+          UK team answers from hands-on product and installation experience &mdash; not a script.
+        </p>
+        <p class="text-base text-muted">
+          Advice is free and impartial. If our product isn&rsquo;t the right fit, we&rsquo;ll say so.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {whyAskUs.map((item) => (
+          <div class="flex items-center gap-2 rounded-lg border border-border bg-surface px-4 py-3 text-sm text-charcoal">
+            <span class="text-accent" aria-hidden="true">&#10003;</span>
+            {item}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>

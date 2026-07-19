@@ -1,0 +1,49 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import FAQAccordionItem from './FAQAccordionItem.astro';
+
+const PREVIEW_LIMIT = 5;
+
+interface Props {
+  id: string;
+  name: string;
+  entries: CollectionEntry<'answers'>[];
+  expertNames: Record<string, string>;
+  showSort?: boolean;
+  isFirst?: boolean;
+}
+
+const { id, name, entries, expertNames, showSort = false, isFirst = false } = Astro.props;
+const preview = entries.slice(0, PREVIEW_LIMIT);
+---
+
+<section id={id} class="scroll-mt-28">
+  <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <h2 class="font-sans text-[19px] font-bold text-charcoal md:text-[22px]">
+      {name}{' '}
+      <span class="font-body text-base font-normal text-muted">
+        &mdash; {entries.length} question{entries.length === 1 ? '' : 's'}
+      </span>
+    </h2>
+    {showSort && (
+      <label class="flex items-center gap-2 text-sm text-muted">
+        Sort:
+        <select class="rounded border border-border bg-surface px-2 py-1.5 text-charcoal">
+          <option>Most viewed</option>
+          <option>Newest</option>
+          <option>A&ndash;Z</option>
+        </select>
+      </label>
+    )}
+  </div>
+
+  <div class="space-y-3">
+    {preview.map((entry, index) => (
+      <FAQAccordionItem entry={entry} expertName={expertNames[entry.data.answeredBy] ?? entry.data.answeredBy} open={isFirst && index === 0} />
+    ))}
+  </div>
+
+  <a href={`/category/${id}`} class="mt-4 inline-block font-semibold text-accent no-underline hover:underline">
+    Show all {entries.length} {name.toLowerCase()} question{entries.length === 1 ? '' : 's'} &rarr;
+  </a>
+</section>

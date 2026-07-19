@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SearchResults from '../islands/SearchResults.tsx';
+---
+
+<Layout
+  title="Search | Enclosure Answers"
+  description="Search electrical enclosure FAQs answered by Spelsberg UK engineers."
+>
+  <nav class="mb-6 text-[13px] text-muted" aria-label="Breadcrumb">
+    <a href="/" class="text-muted no-underline hover:text-accent">Home</a>
+    <span class="mx-2">/</span>
+    <span class="text-charcoal" aria-current="page">Search</span>
+  </nav>
+
+  <SearchResults client:load />
+</Layout>

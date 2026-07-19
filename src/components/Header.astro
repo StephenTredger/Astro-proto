@@ -1,6 +1,5 @@
 ---
 // Header component: utility bar + main nav, per style tile
-const navLinkClass = 'font-medium text-charcoal transition-colors hover:text-accent';
 const mobileNavLinkClass = 'block rounded px-2 py-2 font-medium text-charcoal transition-colors hover:bg-background hover:text-accent';
 
 const navLinks = [
@@ -10,6 +9,15 @@ const navLinks = [
   { href: '/experts', label: 'Our Experts' },
   { href: '/contact', label: 'Contact' },
 ];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+function navLinkClass(href: string) {
+  const isActive = href === currentPath;
+  return `border-b-2 pb-1 font-medium text-charcoal transition-colors hover:border-accent hover:text-accent ${
+    isActive ? 'border-accent' : 'border-transparent'
+  }`;
+}
 ---
 
 <header class="sticky top-0 z-[100] font-body">
@@ -49,12 +57,7 @@ const navLinks = [
 
       <nav class="hidden items-center gap-6 md:flex">
         {navLinks.map((link) => (
-          <a
-            href={link.href}
-            class={link.href === '/'
-              ? `${navLinkClass} border-b-2 border-accent pb-1`
-              : navLinkClass}
-          >
+          <a href={link.href} class={navLinkClass(link.href)}>
             {link.label}
           </a>
         ))}

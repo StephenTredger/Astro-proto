@@ -1,0 +1,151 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import SearchBar from '../../components/SearchBar.astro';
+import EssentialAnswerCard from '../../components/EssentialAnswerCard.astro';
+import FAQAccordionItem from '../../components/FAQAccordionItem.astro';
+import { getTopicStyle } from '../../lib/topicStyles';
+import { isStandardReference } from '../../lib/standardsReference';
+
+export async function getStaticPaths() {
+  const categories = await getCollection('categories');
+  return categories.map((category) => ({
+    params: { slug: category.data.slug },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.props;
+
+const [allAnswers, allCategories, allExperts] = await Promise.all([
+  getCollection('answers'),
+  getCollection('categories'),
+  getCollection('experts'),
+]);
+
+const expertNames = Object.fromEntries(allExperts.map((expert) => [expert.data.slug, expert.data.name]));
+
+const entries = allAnswers
+  .filter((answer) => answer.data.category === category.data.slug)
+  .sort((a, b) => (b.data.publishedDate?.getTime() ?? 0) - (a.data.publishedDate?.getTime() ?? 0));
+
+// Only worth a dedicated "Start here" pick when there's enough content for it to mean something
+// beyond just repeating the full list below.
+const ESSENTIAL_THRESHOLD = 3;
+const essential = entries.length > ESSENTIAL_THRESHOLD ? entries.slice(0, ESSENTIAL_THRESHOLD) : [];
+
+// Standards references aren't a schema field — derived from tags that look like a standard number.
+const references = [
+  ...new Set(entries.flatMap((entry) => entry.data.tags.filter(isStandardReference))),
+];
+
+const otherTopics = allCategories
+  .filter((other) => other.data.slug !== category.data.slug)
+  .map((other) => ({
+    ...getTopicStyle(other.data.slug),
+    slug: other.data.slug,
+    count: allAnswers.filter((answer) => answer.data.category === other.data.slug).length,
+  }))
+  .filter((topic) => topic.count > 0);
+
+const style = getTopicStyle(category.data.slug);
+
+function readingTime(markdown: string | undefined) {
+  const words = markdown?.trim().split(/\s+/).filter(Boolean).length ?? 0;
+  return Math.max(1, Math.round(words / 200));
+}
+---
+
+<Layout
+  title={`${category.data.name} | Enclosure Answers`}
+  description={category.data.description ?? `${category.data.name} questions answered by Spelsberg UK engineers.`}
+>
+  <nav class="mb-6 text-[13px] text-muted" aria-label="Breadcrumb">
+    <a href="/" class="text-muted no-underline hover:text-accent">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/faq" class="text-muted no-underline hover:text-accent">Questions / FAQ</a>
+    <span class="mx-2">/</span>
+    <span class="text-charcoal" aria-current="page">{style.shortName}</span>
+  </nav>
+
+  <section class="mb-12 grid gap-6 md:grid-cols-[1fr_320px] md:items-start">
+    <div>
+      <div class="mb-3 flex flex-wrap items-center gap-3">
+        <span class={`flex h-9 w-9 shrink-0 items-center justify-center rounded text-xs font-bold ${style.colorClass}`}>
+          {style.code}
+        </span>
+        <h1 class="m-0 font-sans text-[28px] font-bold text-charcoal md:text-[32px]">{style.shortName}</h1>
+        <span class="rounded-full border border-border px-3 py-1 text-sm text-muted">
+          {entries.length} answer{entries.length === 1 ? '' : 's'}
+        </span>
+      </div>
+      {category.data.description && (
+        <p class="max-w-2xl text-base text-muted">
+          {category.data.description}
+          {references.length > 0 && ` Referenced against ${references.join(', ')}.`}
+        </p>
+      )}
+    </div>
+    <SearchBar
+      placeholder={`Search within ${category.data.name}...`}
+      buttonLabel="Go"
+      class="max-w-sm md:ml-auto"
+    />
+  </section>
+
+  {essential.length > 0 && (
+    <section class="mb-12">
+      <h2 class="mb-1 font-sans text-[19px] font-bold text-charcoal md:text-[22px]">Start here</h2>
+      <p class="mb-4 text-sm text-muted">The {essential.length} answers most people look for first.</p>
+      <div class="grid gap-4 md:grid-cols-3">
+        {essential.map((entry) => (
+          <EssentialAnswerCard
+            entry={entry}
+            expertName={expertNames[entry.data.answeredBy] ?? entry.data.answeredBy}
+            minutes={readingTime(entry.body)}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section class="mb-8">
+    <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+      <h2 class="font-sans text-[19px] font-bold text-charcoal md:text-[22px]">
+        All {style.shortName} questions{' '}
+        <span class="font-body text-base font-normal text-muted">&mdash; {entries.length}</span>
+      </h2>
+      <label class="flex items-center gap-2 text-sm text-muted">
+        Sort:
+        <select class="rounded border border-border bg-surface px-2 py-1.5 text-charcoal">
+          <option>Most viewed</option>
+          <option>Newest</option>
+          <option>A&ndash;Z</option>
+        </select>
+      </label>
+    </div>
+    <div class="overflow-hidden rounded-lg border border-border bg-surface">
+      {entries.map((entry) => (
+        <FAQAccordionItem
+          entry={entry}
+          expertName={expertNames[entry.data.answeredBy] ?? entry.data.answeredBy}
+          variant="flat"
+        />
+      ))}
+    </div>
+  </section>
+
+  {otherTopics.length > 0 && (
+    <section class="flex flex-wrap items-center gap-2 text-sm">
+      <span class="text-muted">Other topics:</span>
+      {otherTopics.map((topic) => (
+        <a
+          href={`/category/${topic.slug}`}
+          class="rounded-full border border-accent/40 px-3 py-1 font-semibold text-accent no-underline transition-colors hover:border-accent hover:bg-accent/5"
+        >
+          {topic.shortName} ({topic.count})
+        </a>
+      ))}
+    </section>
+  )}
+</Layout>

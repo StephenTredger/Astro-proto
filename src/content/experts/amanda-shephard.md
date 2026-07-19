@@ -1,9 +1,12 @@
 ---
 name: "Amanda Shephard"
 slug: amanda-shephard
-title: "Pro-Active Manager"
+title: "Internal Sales & Technical Support"
 phone: "+44 (0)1952 605847"
 photo: "/images/experts/amanda-shephard.jpg"
+specialisms: ["DIN rail & boards", "stock"]
+yearsInIndustry: "8"
+order: 3
 ---
 
-Amanda runs the Pro-Active phone service, connecting customers directly with a technically trained team member when placing an order over the phone.
+First point of contact for distribution boards, DIN rail layouts, stock and delivery queries — and the fastest route to the right specialist.

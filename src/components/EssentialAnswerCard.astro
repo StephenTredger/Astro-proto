@@ -1,0 +1,20 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'answers'>;
+  expertName: string;
+  minutes: number;
+}
+
+const { entry, expertName, minutes } = Astro.props;
+---
+
+<a
+  href={`/answer/${entry.data.slug}`}
+  class="block rounded-lg border border-accent/20 bg-lime-50/60 p-4 no-underline transition-colors hover:border-accent"
+>
+  <span class="mb-2 block text-[11px] font-semibold uppercase tracking-wide text-muted">Essential</span>
+  <span class="mb-3 block font-sans text-[15px] font-bold text-charcoal">{entry.data.question}</span>
+  <span class="block text-sm text-muted">{expertName} &middot; {minutes} min read</span>
+</a>

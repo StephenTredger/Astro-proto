@@ -1,0 +1,25 @@
+---
+interface Props {
+  placeholder: string;
+  buttonLabel?: string;
+  class?: string;
+}
+
+const { placeholder, buttonLabel = 'Search', class: className = 'max-w-xl' } = Astro.props;
+---
+
+<form action="/search" method="get" class={`flex ${className} flex-col gap-2 sm:flex-row`}>
+  <input
+    type="search"
+    name="q"
+    placeholder={placeholder}
+    aria-label="Search questions"
+    class="flex-1 rounded border border-border bg-surface px-4 py-3 font-body text-base text-charcoal placeholder:text-muted"
+  />
+  <button
+    type="submit"
+    class="cursor-pointer rounded bg-accent px-6 py-3 font-semibold text-white transition-colors hover:bg-accent-dark"
+  >
+    {buttonLabel}
+  </button>
+</form>
