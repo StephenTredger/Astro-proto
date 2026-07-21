@@ -9,6 +9,6 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  site: 'https://<username>.github.io',
-  base: '/<repo-name>',
+  site: 'https://StephenTredger.github.io',
+  base: '/Astro-proto',
 });
