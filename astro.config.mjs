@@ -9,4 +9,6 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+  site: 'https://<username>.github.io',
+  base: '/<repo-name>',
 });
